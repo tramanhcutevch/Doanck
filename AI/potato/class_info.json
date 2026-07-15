@@ -1,0 +1,40 @@
+{
+    "model_name": "EfficientNetV2B1",
+    "class_names": [
+        "Bacteria",
+        "Fungi",
+        "Healthy",
+        "Phytopthora",
+        "Virus"
+    ],
+    "label_to_id": {
+        "Bacteria": 0,
+        "Fungi": 1,
+        "Healthy": 2,
+        "Phytopthora": 3,
+        "Virus": 4
+    },
+    "id_to_label": {
+        "0": "Bacteria",
+        "1": "Fungi",
+        "2": "Healthy",
+        "3": "Phytopthora",
+        "4": "Virus"
+    },
+    "removed_classes": [
+        "Pest",
+        "Nematode"
+    ],
+    "image_size": 240,
+    "batch_size": 8,
+    "best_val_accuracy": 0.8520833253860474,
+    "best_val_loss": 0.4751988649368286,
+    "onnx_model_name": "potato_effv2b1_best.onnx",
+    "input_shape": [
+        null,
+        240,
+        240,
+        3
+    ],
+    "input_dtype": "float32"
+}

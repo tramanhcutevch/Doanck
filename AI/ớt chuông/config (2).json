@@ -1,0 +1,55 @@
+{
+    "architectures": [
+        "ResNetForImageClassification"
+    ],
+    "model_type": "resnet",
+    "num_labels": 13,
+    "id2label": {
+        "0": "Aphid",
+        "1": "Bacterial spot",
+        "2": "Blossom end rot",
+        "3": "Burn",
+        "4": "Edema",
+        "5": "Healthy",
+        "6": "Leaf curl",
+        "7": "Leaf miners",
+        "8": "Mosaic virus",
+        "9": "Nutrient deficiency",
+        "10": "Powdery mildew",
+        "11": "Spider mite",
+        "12": "Thrips"
+    },
+    "label2id": {
+        "Aphid": "0",
+        "Bacterial spot": "1",
+        "Blossom end rot": "2",
+        "Burn": "3",
+        "Edema": "4",
+        "Healthy": "5",
+        "Leaf curl": "6",
+        "Leaf miners": "7",
+        "Mosaic virus": "8",
+        "Nutrient deficiency": "9",
+        "Powdery mildew": "10",
+        "Spider mite": "11",
+        "Thrips": "12"
+    },
+    "image_size": 224,
+    "mean": [
+        0.485,
+        0.456,
+        0.406
+    ],
+    "std": [
+        0.229,
+        0.224,
+        0.225
+    ],
+    "tags": [
+        "image-classification",
+        "pytorch",
+        "resnet",
+        "computer-vision",
+        "agriculture"
+    ]
+}
