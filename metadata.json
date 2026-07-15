@@ -1,0 +1,5 @@
+{
+  "name": "Terraform Flora | AgroPro AI",
+  "description": "Hệ sinh thái nông nghiệp thông minh tích hợp AI chẩn đoán bệnh cây trồng, quản lý thuốc BVTV, theo dõi chu kỳ sinh trưởng và cộng đồng nông nghiệp.",
+  "requestFramePermissions": ["camera"]
+}

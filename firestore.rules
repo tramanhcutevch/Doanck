@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "tramanhle200@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // Collection: crops
+    match /crops/{cropId} {
+      allow read: if true; // Knowledge library is public
+      allow write: if isAdmin();
+    }
+
+    // Collection: pesticides
+    match /pesticides/{pesticideId} {
+      allow read: if true; // Product catalog is public
+      allow write: if isAdmin();
+    }
+
+    // Collection: userInventory
+    match /userInventory/{itemId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Collection: pesticideUsageLogs
+    match /pesticideUsageLogs/{logId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Collection: growthCycles
+    match /growthCycles/{cycleId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: growthTasks
+    match /growthTasks/{taskId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: growthPhotos
+    match /growthPhotos/{photoId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: forumPosts
+    match /forumPosts/{postId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid && request.resource.data.userId == resource.data.userId) || 
+        isValidCounterUpdate(postId)
+      );
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Collection: likes
+    match /likes/{likeId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && likeId == request.auth.uid + "_" + request.resource.data.postId;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Helper for counter updates
+    function isValidCounterUpdate(postId) {
+      let diff = request.resource.data.likesCount - resource.data.likesCount;
+      let likePath = /databases/$(database)/documents/likes/$(request.auth.uid + '_' + postId);
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount']) &&
+             (
+               (diff == 1 && exists(likePath)) ||
+               (diff == -1 && !exists(likePath))
+             );
+    }
+
+    // Collection: diagnoses
+    match /diagnoses/{diagnosisId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: bookmarks
+    match /bookmarks/{bookmarkId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && bookmarkId == request.auth.uid + "_" + request.resource.data.pesticideId;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: protocolBookmarks
+    match /protocolBookmarks/{bookmarkId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && bookmarkId == request.auth.uid + "_" + request.resource.data.diseaseId;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Collection: users
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow write: if isOwner(userId) || isAdmin();
+    }
+  }
+}

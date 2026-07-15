@@ -1,0 +1,200 @@
+{
+  "entities": {
+    "Crop": {
+      "title": "Crop",
+      "description": "Information about a specific crop type.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "scientificName": { "type": "string" },
+        "description": { "type": "string" },
+        "growthStages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "commonDiseases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "careInstructions": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "Pesticide": {
+      "title": "Pesticide",
+      "description": "Information about a pesticide or agricultural product.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "ingredients": { "type": "string" },
+        "purpose": { "type": "string" },
+        "dosage": { "type": "string" },
+        "instructions": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "safetyWarnings": { "type": "string" },
+        "compatibility": { "type": "string" },
+        "manufacturer": { "type": "string" },
+        "expiryMonths": { "type": "number" },
+        "image": { "type": "string" }
+      },
+      "required": ["name", "price"]
+    },
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "A user's personal pesticide stock.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "pesticideId": { "type": "string" },
+        "pesticideName": { "type": "string" },
+        "quantity": { "type": "number" },
+        "unit": { "type": "string" },
+        "purchaseDate": { "type": "string", "format": "date" },
+        "expiryDate": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      },
+      "required": ["userId", "pesticideId", "quantity", "unit"]
+    },
+    "UsageLog": {
+      "title": "Usage Log",
+      "description": "A record of pesticide application.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "inventoryId": { "type": "string" },
+        "pesticideName": { "type": "string" },
+        "amount": { "type": "number" },
+        "unit": { "type": "string" },
+        "crop": { "type": "string" },
+        "purpose": { "type": "string" },
+        "date": { "type": "string", "format": "date" }
+      },
+      "required": ["userId", "inventoryId", "amount", "date"]
+    },
+    "GrowthCycle": {
+      "title": "Growth Cycle",
+      "description": "A user's specific crop growth tracking instance.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "cropName": { "type": "string" },
+        "startDate": { "type": "string", "format": "date" },
+        "duration": { "type": "number", "description": "Expected duration in days" },
+        "currentStage": { "type": "string", "enum": ["Gieo trồng", "Sinh trưởng", "Ra hoa", "Thu hoạch"] },
+        "notes": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "harvested", "failed"] },
+        "progress": { "type": "number" },
+        "lastUpdate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "cropName", "startDate", "duration"]
+    },
+    "GrowthTask": {
+      "title": "Growth Task",
+      "description": "A task related to a specific growth cycle.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "cycleId": { "type": "string" },
+        "title": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date" },
+        "completed": { "type": "boolean" },
+        "type": { "type": "string", "enum": ["water", "fertilize", "check", "other"] }
+      },
+      "required": ["userId", "cycleId", "title", "dueDate"]
+    },
+    "GrowthPhoto": {
+      "title": "Growth Photo",
+      "description": "A photo tracking the progress of a growth cycle.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "cycleId": { "type": "string" },
+        "url": { "type": "string", "description": "Base64 or URL of the photo" },
+        "date": { "type": "string", "format": "date" },
+        "note": { "type": "string" }
+      },
+      "required": ["userId", "cycleId", "url", "date"]
+    },
+    "ForumPost": {
+      "title": "Forum Post",
+      "description": "A community discussion post.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "likesCount": { "type": "number" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["userId", "title", "content"]
+    },
+    "Like": {
+      "title": "Like",
+      "description": "A user's like on a forum post.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "postId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "postId"]
+    },
+    "Diagnosis": {
+      "title": "Diagnosis",
+      "description": "AI-powered crop disease diagnosis result.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "diseaseName": { "type": "string" },
+        "confidence": { "type": "number" },
+        "recommendation": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "imageUrl", "diseaseName"]
+    },
+    "ProtocolBookmark": {
+      "title": "Protocol Bookmark",
+      "description": "A user's bookmarked treatment protocol.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "diseaseId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "diseaseId"]
+    },
+    "Bookmark": {
+      "title": "Bookmark",
+      "description": "A user's bookmarked pesticide or product.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "pesticideId": { "type": "string" },
+        "pesticideName": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "pesticideId"]
+    }
+  },
+  "firestore": {
+    "/crops": { "schema": "Crop", "description": "Knowledge library for crops." },
+    "/pesticides": { "schema": "Pesticide", "description": "Database of pesticides and products." },
+    "/userInventory": { "schema": "InventoryItem", "description": "User's personal pesticide inventory." },
+    "/pesticideUsageLogs": { "schema": "UsageLog", "description": "History of pesticide usage." },
+    "/growthCycles": { "schema": "GrowthCycle", "description": "User crop growth tracking." },
+    "/growthTasks": { "schema": "GrowthTask", "description": "Tasks for growth cycles." },
+    "/growthPhotos": { "schema": "GrowthPhoto", "description": "Photos for growth cycles." },
+    "/forumPosts": { "schema": "ForumPost", "description": "Community forum discussions." },
+    "/likes": { "schema": "Like", "description": "User likes on forum posts." },
+    "/diagnoses": { "schema": "Diagnosis", "description": "History of AI diagnoses." },
+    "/bookmarks": { "schema": "Bookmark", "description": "User's bookmarked pesticides." },
+    "/protocolBookmarks": { "schema": "ProtocolBookmark", "description": "User's bookmarked treatment protocols." }
+  }
+}

@@ -1,0 +1,18 @@
+.env
+.env.*
+!.env.example
+
+node_modules
+dist
+.git
+.vercel
+.DS_Store
+
+AI/Mango-Leaf-Disease-Prediction-main
+AI/cassava
+AI/app (1).py
+**/__pycache__
+**/*.pyc
+**/*.ipynb
+**/*.h5
+**/*.pth
